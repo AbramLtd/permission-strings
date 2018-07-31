@@ -27,4 +27,5 @@ test('creates permission tree correctly', () => {
       '*': ['*'],
     },
   });
+  expect(create('user:get:*', 'login:get:*')).toEqual({ user: { get: ['*'] }, login: { get: ['*'] } });
 });
