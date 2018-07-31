@@ -1,23 +1,25 @@
 const parse = require('./parse');
 
+
 function create(...permissionStrings) {
   const permissions = permissionStrings.map(permission => parse(permission));
   const permissionTree = {};
   permissions.forEach(({ resource, actions, ids }) => {
-    if (!(resource in permissionTree)) {
-      permissionTree[resource] = {};
-    }
-    if (!(actions in permissionTree[resource])) {
-      permissionTree[resource][actions] = [];
-    }
-    const idsArray = Array.from(
-      new Set(permissionTree[resource][actions].concat(ids.map(t => t.toString()))),
-    ).sort();
-    if (idsArray.includes('*')) {
-      permissionTree[resource][actions] = ['*'];
-    } else {
-      permissionTree[resource][actions] = idsArray;
-    }
+    if (!permissionTree[resource]) permissionTree[resource] = {};
+    if (permissionTree[resource]['*'] && permissionTree[resource]['*'].includes('*')) return;
+    actions.forEach((action) => {
+      if (!permissionTree[resource][action]) permissionTree[resource][action] = [];
+      if (permissionTree[resource][action].includes('*')) return;
+      if (ids.includes('*')) {
+        permissionTree[resource][action] = ['*'];
+      } else {
+        ids.forEach((id) => {
+          if (permissionTree[resource]['*'] && permissionTree[resource]['*'].includes(id)) return;
+          permissionTree[resource][action].push(id);
+        });
+      }
+      permissionTree[resource][action].sort();
+    });
   });
   return permissionTree;
 }
