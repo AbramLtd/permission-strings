@@ -8,7 +8,7 @@ function resolveToArray(value) {
 }
 
 
-function isPermited(testingPermissionStrings, permitedPermissionStrings) {
+function isPermited(permitedPermissionStrings, testingPermissionStrings) {
   if (!testingPermissionStrings) {
     throw Error('provide permission string for testing as first argument');
   }
@@ -18,7 +18,26 @@ function isPermited(testingPermissionStrings, permitedPermissionStrings) {
   const permits = create(...resolveToArray(permitedPermissionStrings));
   const permissions = create(...resolveToArray(testingPermissionStrings));
 
-  console.log(permits, permissions);
+  if (permits['*'] && permits['*']['*'] && permits['*']['*'].includes('*')) {
+    return true;
+  }
+
+  return Object.keys(permits).every((resource) => {
+    if (permissions[resource] && permits[resource]['*'] && permits[resource]['*'].includes('*')) {
+      return true;
+    }
+    return Object.keys(permits[resource]).every((action) => {
+      if (permissions[resource] && permissions[resource][action] && permits[resource][action].includes('*')) {
+        return true;
+      }
+      return permits[resource][action].every((id) => {
+        if (permissions[resource] && permissions[resource][action] && permissions[resource][action].includes(id)) {
+          return true;
+        }
+        return false;
+      });
+    });
+  });
 }
 
 module.exports = isPermited;
