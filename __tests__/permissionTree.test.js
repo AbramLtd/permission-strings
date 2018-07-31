@@ -22,4 +22,9 @@ test('creates permission tree correctly', () => {
       '*': ['1'], get: ['2'], post: ['2', '3'], delete: ['2', '4'],
     },
   });
+  expect(create('user:*:1', 'user:get,post,delete:1,2', 'user:post:3', 'user:delete:4', 'user:*:*')).toEqual({
+    user: {
+      '*': ['*'],
+    },
+  });
 });

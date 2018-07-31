@@ -7,6 +7,11 @@ function create(...permissionStrings) {
   permissions.forEach(({ resource, actions, ids }) => {
     if (!permissionTree[resource]) permissionTree[resource] = {};
     if (permissionTree[resource]['*'] && permissionTree[resource]['*'].includes('*')) return;
+    if (actions.includes('*') && ids.includes('*')) {
+      permissionTree[resource] = {};
+      permissionTree[resource]['*'] = ['*'];
+      return;
+    }
     actions.forEach((action) => {
       if (!permissionTree[resource][action]) permissionTree[resource][action] = [];
       if (permissionTree[resource][action].includes('*')) return;
