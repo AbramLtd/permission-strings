@@ -31,7 +31,11 @@ function isPermited(permitedPermissionStrings, testingPermissionStrings) {
         return true;
       }
       return permits[resource][action].every((id) => {
-        if (permissions[resource] && permissions[resource][action] && permissions[resource][action].includes(id)) {
+        if (
+          permissions[resource]
+          && permissions[resource][action]
+          && permissions[resource][action].includes(id)
+        ) {
           return true;
         }
         return false;
