@@ -7,7 +7,7 @@ function parse(permissionString) {
   result.actions = [];
   if (actions) {
     const actionsArray = actions.split(',');
-    if (actionsArray.every(t => t !== '*' && t !== undefined)) {
+    if (actionsArray.every(action => action !== '*' && action !== undefined)) {
       result.actions = actionsArray;
     } else {
       result.actions = ['*'];
@@ -16,7 +16,7 @@ function parse(permissionString) {
   result.ids = [];
   if (ids) {
     const idsArray = ids.split(',');
-    if (idsArray.every(t => t !== '*' && t !== undefined)) {
+    if (idsArray.every(id => id !== '*' && id !== undefined)) {
       result.ids = idsArray;
     } else {
       result.ids = ['*'];
